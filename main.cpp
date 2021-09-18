@@ -14,7 +14,8 @@ struct pos
 };
 
 int main()
-{
+{   
+game_start:
     sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "TUX RUNNER");
 
     window.setFramerateLimit(60);
@@ -60,15 +61,42 @@ int main()
     sf::Text text;
     text.setFont(font);
     text.setPosition(text_pos.x, text_pos.y);
-    text.setCharacterSize(100);
+    text.setCharacterSize(50);
     text.setFillColor(sf::Color::Red);
 
     std::string score_string;
 
-    text.setString("qula - 0");
+    text.setString("daaWire enTers TamaSis dasawyebad");
 
-    window.draw(text);
-    window.display();
+    while (window.isOpen())
+    {
+        bool status = false;
+
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+            {
+                window.close();
+            }
+
+            if (event.key.code == sf::Keyboard::Enter)
+            {
+                status = true;
+                break;
+            }
+        }
+
+        if (status == true)
+        {
+            break;
+        }
+
+        window.clear(sf::Color::Yellow);
+        window.draw(text);
+        window.display();
+    }
+
+    text.setString("qula - 0");
 
     while (window.isOpen())
     {
@@ -87,7 +115,7 @@ int main()
             if (event.key.code == sf::Keyboard::Down)
             {
                 pos.y += STEP_LENGTH;
-            }
+            }                        
 
             if (event.key.code == sf::Keyboard::Right)
             {
@@ -172,31 +200,34 @@ int main()
         window.display();
     }
 
-    while (1)
-    {
-        window.clear(sf::Color::Blue);
+    text_pos.x = 50;
+    text_pos.y = sf::VideoMode::getDesktopMode().height/2;
 
-        text_pos.x = 50;
-        text_pos.y = sf::VideoMode::getDesktopMode().height/2;
+    text.setCharacterSize(50);
+    text.setPosition(text_pos.x, text_pos.y);
 
-        text.setCharacterSize(50);
-        text.setPosition(text_pos.x, text_pos.y);
+    score_string = "TamaSi dasrulda, Tqveni mimdinare qula aris - " + std::to_string(points) + "\nxelaxla dasawyebad daaCireT enTer-s";
 
-        score_string = "TamaSi dasrulda, Tqveni mimdinare qula aris - " + std::to_string(points);
+    text.setString(score_string);
 
-        text.setString(score_string);
-
-        window.draw(text);
-
-        window.display();
-
+    while (window.isOpen())
+    {        
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
             {
                 window.close();
             }
+
+            if (event.key.code == sf::Keyboard::Enter)
+            {
+                goto game_start;
+            }
         }
+
+        window.clear(sf::Color::Blue);
+        window.draw(text);
+        window.display();      
     }
 
     return 0;
