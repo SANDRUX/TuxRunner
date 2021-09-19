@@ -1,11 +1,12 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <SFML/Audio.hpp>
 #include <stdlib.h>
 
 #define STEP_LENGTH 10
 #define WIN_STEP_X 1
-#define WIN_STEP_Y 2
+#define WIN_STEP_Y 1
 #define APPEAR_DISTANCE 500
 
 struct pos
@@ -28,19 +29,33 @@ game_start:
     sf::Event event;
 
     sf::Texture texture;
-    texture.loadFromFile("/home/sandro/tux_runner/tux_runner/tux/penguin.png");
+    texture.loadFromFile("tux/penguin.png");
 
     sf::Texture windwosTexture;
-    windwosTexture.loadFromFile("/home/sandro/tux_runner/tux_runner/tux/windows.png");
+    windwosTexture.loadFromFile("tux/windows.png");
 
     sf::Sprite windows;
     windows.setTexture(windwosTexture);
 
     sf::Texture mapTexture;
-    mapTexture.loadFromFile("/home/sandro/tux_runner/tux_runner/tux/map.jpg");
+    mapTexture.loadFromFile("tux/map.jpg");
 
     sf::Sprite map;
     map.setTexture(mapTexture);
+
+    sf::Texture startBackground;
+    startBackground.loadFromFile("tux/tux.png");
+
+    sf::Sprite startBackgroundSprite;
+    startBackgroundSprite.setTexture(startBackground);
+
+    startBackgroundSprite.setPosition(sf::VideoMode::getDesktopMode().width/2 - 206, sf::VideoMode::getDesktopMode().height/2 - 245);
+
+    sf::Texture gameOver;
+    gameOver.loadFromFile("tux/game_over.png");
+
+    sf::Sprite gameOverSprite;
+    gameOverSprite.setTexture(gameOver);
 
     sf::IntRect rectSourceSprite(129, 0, 129, 903);
 
@@ -56,7 +71,7 @@ game_start:
     unsigned int points = 0;
 
     sf::Font font;
-    font.loadFromFile("/home/sandro/tux_runner/tux_runner/tux/geopixel.ttf");
+    font.loadFromFile("tux/geopixel.ttf");
 
     sf::Text text;
     text.setFont(font);
@@ -64,7 +79,22 @@ game_start:
     text.setCharacterSize(50);
     text.setFillColor(sf::Color::Red);
 
+    sf::Music soundTrack;
+    soundTrack.openFromFile("tux/beeh.wav");
+
+    sf::Music gameOverSound;
+    gameOverSound.openFromFile("tux/game_over.wav");
+
+    sf::Music awardSound;
+    awardSound.openFromFile("tux/award.wav");
+
+    sf::Music startSound;
+    startSound.openFromFile("tux/start.wav");
+
     std::string score_string;
+
+    startSound.play();
+    startSound.setLoop(true);
 
     text.setString("daaWire enTers TamaSis dasawyebad");
 
@@ -86,15 +116,22 @@ game_start:
             }
         }
 
-        if (status == true)
+        if (status)
         {
             break;
         }
 
-        window.clear(sf::Color::Yellow);
+        window.clear(sf::Color::Cyan);
+        window.draw(startBackgroundSprite);
         window.draw(text);
         window.display();
     }
+
+    startSound.stop();
+
+    soundTrack.play();
+    soundTrack.setVolume(50);
+    soundTrack.setLoop(true);
 
     text.setString("qula - 0");
 
@@ -123,7 +160,7 @@ game_start:
             }
 
             if (event.key.code == sf::Keyboard::Left)
-            {
+            {                
                 pos.x -= STEP_LENGTH;
             }
 
@@ -153,12 +190,15 @@ game_start:
 
         else if (win_pos.x + 150 < pos.x)
         {
+            awardSound.stop();
+            awardSound.play();
+
             points ++;
             score_string = "qula - " + std::to_string(points);
 
             text.setString(score_string);
 
-            win_pos.x = pos.x + APPEAR_DISTANCE + rand() % APPEAR_DISTANCE;
+            win_pos.x = pos.x + APPEAR_DISTANCE + rand() % APPEAR_DISTANCE;            
         }
 
         if (win_pos.y > pos.y)
@@ -200,13 +240,16 @@ game_start:
         window.display();
     }
 
-    text_pos.x = 50;
-    text_pos.y = sf::VideoMode::getDesktopMode().height/2;
+    soundTrack.stop();
 
     text.setCharacterSize(50);
-    text.setPosition(text_pos.x, text_pos.y);
+    text.setPosition(200, 0);
 
-    score_string = "TamaSi dasrulda, Tqveni mimdinare qula aris - " + std::to_string(points) + "\nxelaxla dasawyebad daaCireT enTer-s";
+    gameOverSprite.setPosition(200, 200);
+
+    gameOverSound.play();
+
+    score_string = "TamaSi dasrulda, Tqveni mimdinare qula aris - " + std::to_string(points) + "\ngasagrZeleblad daaWireT enTer-s";
 
     text.setString(score_string);
 
@@ -220,13 +263,14 @@ game_start:
             }
 
             if (event.key.code == sf::Keyboard::Enter)
-            {
+            {                
                 goto game_start;
             }
         }
 
         window.clear(sf::Color::Blue);
         window.draw(text);
+        window.draw(gameOverSprite);
         window.display();      
     }
 

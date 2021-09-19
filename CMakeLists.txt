@@ -7,4 +7,4 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(tux_runner main.cpp)
 
-target_link_libraries(tux_runner -lsfml-system -lsfml-window -lsfml-graphics)
+target_link_libraries(tux_runner -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio)
