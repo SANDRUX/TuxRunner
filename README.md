@@ -4,6 +4,10 @@
   <img src="https://github.com/SANDRUX/TuxRunner/blob/master/tux/tux.png" width="400" />
 </p>
 
+### Dependencies
+
+libsfml (https://www.sfml-dev.org/download.php)
+
 ### Building
 
 ```bash
