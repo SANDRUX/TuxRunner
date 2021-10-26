@@ -1,1 +1,8 @@
 CMakeLists.txt.user
+
+SFML
+
+.vscode
+*.o
+*.exe
+*.dll

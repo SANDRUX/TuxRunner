@@ -16,14 +16,14 @@ struct pos
 };
 
 int main()
-{   
+{
 game_start:
     sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "TUX RUNNER");
 
     window.setFramerateLimit(60);
 
     pos map_pos {0, 0};
-    pos win_pos {1920, 1080};
+    pos win_pos {0, 0};
     pos text_pos {400, 0};
     pos pos {0, 0};
 
@@ -44,13 +44,18 @@ game_start:
     sf::Sprite map;
     map.setTexture(mapTexture);
 
+
+    float scale = float(sf::VideoMode::getDesktopMode().width) / float(mapTexture.getSize().x / 2.f); // get screen to texture size factor
+    
+    map.setScale({scale, scale}); // set background scale correctly
+
     sf::Texture startBackground;
     startBackground.loadFromFile("tux/tux.png");
 
     sf::Sprite startBackgroundSprite;
     startBackgroundSprite.setTexture(startBackground);
 
-    startBackgroundSprite.setPosition(sf::VideoMode::getDesktopMode().width/2 - 206, sf::VideoMode::getDesktopMode().height/2 - 245);
+    startBackgroundSprite.setPosition(sf::VideoMode::getDesktopMode().width/2, sf::VideoMode::getDesktopMode().height/2);
 
     sf::Texture gameOver;
     gameOver.loadFromFile("tux/game_over.png");
@@ -64,6 +69,9 @@ game_start:
 
     pos.x = sf::VideoMode::getDesktopMode().width / 2;
     pos.y = sf::VideoMode::getDesktopMode().height / 2;
+
+    win_pos.x = sf::VideoMode::getDesktopMode().width;
+    win_pos.y = sf::VideoMode::getDesktopMode().height;
 
     pengo.setPosition(pos.x, pos.y);
 
@@ -99,6 +107,7 @@ game_start:
     startSound.setLoop(true);
 
     text.setString("daaWire enTers TamaSis dasawyebad");
+
 
     while (window.isOpen())
     {
@@ -140,7 +149,7 @@ game_start:
     while (window.isOpen())
     {
         while (window.pollEvent(event))
-        {          
+        {
             if (event.type == sf::Event::Closed)
             {
                 window.close();
@@ -200,8 +209,8 @@ game_start:
 
             text.setString(score_string);
 
-            win_pos.x = pos.x + APPEAR_DISTANCE + rand() % APPEAR_DISTANCE;  
-            win_pos.y = pos.y + APPEAR_DISTANCE + rand() % APPEAR_DISTANCE;          
+            win_pos.x = pos.x + APPEAR_DISTANCE + rand() % APPEAR_DISTANCE;
+            win_pos.y = pos.y + APPEAR_DISTANCE + rand() % APPEAR_DISTANCE;
         }
 
         if (win_pos.y > pos.y)
@@ -213,8 +222,11 @@ game_start:
         {
             win_pos.y += WIN_STEP_Y;
         }
+        
+        
+        // map_pos.x < -(float(mapTexture.getSize().x * scale) / 2.f) // this is another way involving more math
 
-        if (map_pos.x == -1920)
+        if (map_pos.x < -(map.getGlobalBounds().width / 2.f))
         {
             map_pos.x = 0;
         }
@@ -239,7 +251,7 @@ game_start:
 
         last_points = points;
 
-        map_pos.x -= 2;
+        map_pos.x -= 20;
 
         window.clear();
 
@@ -254,6 +266,8 @@ game_start:
 
         window.display();
     }
+
+    sf::sleep(sf::seconds(1));
 
     soundTrack.stop();
 
