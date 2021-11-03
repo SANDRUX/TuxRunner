@@ -17,7 +17,7 @@ set ASYNC_BUILD=1
 
 set COMPILER_FLAGS=-std=c++20 -DSFML_STATIC
 set ADDITIONAL_LIBRARIES=-static-libstdc++ -static -lsfml-graphics-s -lsfml-audio-s -lsfml-window-s -lsfml-system-s -lwinmm -lopengl32 -lgdi32 -lfreetype -lcomdlg32 -lopenal32 -lFLAC -lvorbisenc -lvorbisfile -lvorbis -logg
-set ADDITIONAL_LIBDIRS=-LSFML/lib64
+set ADDITIONAL_LIBDIRS=-LSFML/lib
 set ADDITIONAL_INCLUDEDIRS=-ISFML/include
 
 del %OUTPUT% 2>nul
